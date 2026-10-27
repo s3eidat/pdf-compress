@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>PDF Compress — Make Scanned PDFs Smaller, Free &amp; Private | S3eidat Tools</title>
+<meta name="description" content="Shrink scanned and photo-heavy PDFs in your browser: choose DPI and JPEG quality, grayscale, compare before and after. Free, nothing uploaded.">
+<meta property="og:title" content="PDF Compress — make scanned PDFs much smaller">
+<meta property="og:description" content="Re-renders pages as JPEG at the DPI you choose. Before/after preview. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<script src="lib/pdf-lib.min.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/pdf-compress/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/pdf-compress/">
+<meta property="og:image" content="https://s3eidat.github.io/pdf-compress/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF Compress — Make scanned PDFs much smaller">
+<meta name="twitter:description" content="Make scanned PDFs much smaller. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/pdf-compress/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "PDF Compress", "url": "https://s3eidat.github.io/pdf-compress/", "description": "Make scanned PDFs much smaller. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/pdf-compress/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="pdf-compress">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>PDF Compress</h1>
+    <p>Make scanned and photo-heavy PDFs much smaller by re-saving every page as a JPEG at the resolution you pick. Compare before and after. The file never leaves this device.</p>
+  </section>
+
+  <section class="card" id="dropCard">
+    <label class="drop" id="drop">
+      <input type="file" accept=".pdf,application/pdf" hidden>
+      <svg class="i"><use href="#i-upload"/></svg>
+      <b>Drop a PDF here</b>
+      <span>or click to choose one. Works best on scans and photo PDFs.</span>
+    </label>
+  </section>
+
+  <div class="cp-layout" id="work" hidden>
+    <div class="stack">
+      <section class="card">
+        <div class="row between cp-file">
+          <div class="row cp-fname"><svg class="i"><use href="#i-file"/></svg><b id="fname"></b></div>
+          <button class="btn ghost small" id="change"><svg class="i"><use href="#i-refresh"/></svg>Another file</button>
+        </div>
+        <span class="faint" id="fmeta"></span>
+
+        <div class="seg cp-presets mt" id="preset" role="group" aria-label="Preset">
+          <button aria-pressed="false" data-v="email">Email small</button>
+          <button aria-pressed="true" data-v="balanced">Balanced</button>
+          <button aria-pressed="false" data-v="high">High quality</button>
+        </div>
+        <div class="grid-2 mt">
+          <label class="field"><span class="cp-lbl">Resolution <span class="cp-val" id="dpiVal"></span></span><input type="range" id="dpi" min="72" max="300" step="1"></label>
+          <label class="field"><span class="cp-lbl">JPEG quality <span class="cp-val" id="qVal"></span></span><input type="range" id="q" min="30" max="95" step="1"></label>
+        </div>
+        <label class="check mt"><input type="checkbox" id="gray"> Grayscale (smaller, good for text scans)</label>
+        <p class="cp-honest"><b>Heads-up:</b> every page becomes a picture. Text can no longer be selected or searched, and links, bookmarks and form fields are dropped. Great for scans and photos; for text-only PDFs the result may even be bigger.</p>
+        <div class="row">
+          <button class="btn primary big grow" id="go"><svg class="i"><use href="#i-download"/></svg>Compress PDF</button>
+          <button class="btn big" id="cancel" hidden>Cancel</button>
+        </div>
+        <div class="cp-progress mt" id="progress" hidden><div class="cp-bar"><i id="bar"></i></div><span class="faint" id="ptext"></span></div>
+      </section>
+
+      <section class="card" id="result" hidden>
+        <div class="stats" id="stats"></div>
+        <p class="cp-verdict mt" id="verdict"></p>
+        <div class="row mt">
+          <button class="btn primary" id="dlOut"><svg class="i"><use href="#i-download"/></svg><span id="dlOutLbl">Download compressed</span></button>
+          <button class="btn" id="dlOrig" hidden><svg class="i"><use href="#i-download"/></svg>Download original</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="row between">
+        <h2>Preview <small id="pvPage">page 1</small></h2>
+        <div class="row">
+          <button class="btn icon small" id="pvPrev" aria-label="Previous page">‹</button>
+          <button class="btn icon small" id="pvNext" aria-label="Next page">›</button>
+          <label class="check"><input type="checkbox" id="zoom"> Zoom 1:1</label>
+        </div>
+      </div>
+      <div class="cp-compare" id="compare">
+        <figure><div class="cp-pane" id="paneA"></div><figcaption>Original</figcaption></figure>
+        <figure><div class="cp-pane" id="paneB"></div><figcaption id="capB">Compressed</figcaption></figure>
+      </div>
+      <p class="faint" id="estimate"></p>
+    </section>
+  </div>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

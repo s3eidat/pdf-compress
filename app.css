@@ -1,0 +1,35 @@
+.cp-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 14px; align-items: start; }
+.cp-file { flex-wrap: nowrap; }
+.cp-fname { gap: 8px; min-width: 0; flex-wrap: nowrap; }
+.cp-fname b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cp-presets { display: flex; }
+.cp-presets button { flex: 1; }
+.cp-val { float: right; color: var(--accent); font-variant-numeric: tabular-nums; }
+.cp-honest { margin: 14px 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2); font-size: 12.5px; }
+.cp-honest b { color: var(--warn); }
+.cp-progress { display: grid; gap: 6px; }
+.cp-bar { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+.cp-bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .2s; }
+.cp-verdict { margin: 12px 0 0; color: var(--text-2); }
+.cp-verdict.good b { color: var(--ok); }
+.cp-verdict.bad b { color: var(--warn); }
+.stat.cp-hi b { color: var(--accent); }
+
+.cp-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.cp-compare figure { margin: 0; display: grid; gap: 6px; }
+.cp-compare figcaption { font-size: 12px; color: var(--text-3); text-align: center; }
+.cp-pane { position: relative; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; display: grid; place-items: center; padding: 8px; min-height: 200px; }
+.cp-pane img, .cp-pane canvas { max-width: 100%; height: auto; display: block; box-shadow: 0 3px 14px -4px rgba(0,0,0,.45); background: #fff; }
+.cp-pane .faint { padding: 30px 8px; text-align: center; }
+.cp-compare.zoomed .cp-pane { place-items: start; overflow: auto; height: 420px; padding: 0; }
+.cp-compare.zoomed .cp-pane img, .cp-compare.zoomed .cp-pane canvas { max-width: none; box-shadow: none; }
+#estimate { margin: 10px 0 0; }
+
+@media (max-width: 860px) { .cp-layout { grid-template-columns: minmax(0, 1fr); } }
+#stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#stats .stat { padding: 12px; }
+#stats .stat b { font-size: 17px; white-space: nowrap; }
+@media (max-width: 480px) { #stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.cp-lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.cp-lbl > span { float: none; }
